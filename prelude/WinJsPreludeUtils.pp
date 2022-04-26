@@ -117,14 +117,6 @@ implementation
     Result := IntAsJsNumber(GetCurrentProcessID)
   end;
 
-  (*
-  function GlobalLoadLibrary(Args: PJsValue; ArgCount: Word): TJsValue;
-  begin
-    CheckParams('loadLibrary', Args, ArgCount, [jsString], 1);
-    Result := LoadWinJsLibrary(JsStringAsString(Args^));
-  end;
-  *)
-
   function GetJsValue;
   begin
     Result := CreateObject;
