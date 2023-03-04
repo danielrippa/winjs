@@ -1,0 +1,57 @@
+program WinJs;
+
+{$mode delphi}
+
+uses ChakraErr, SysUtils, WinjsUtils;
+
+begin
+
+  if ParamCount > 0 then begin
+
+    try
+
+      ExitCode := RunScriptFile(ParamStr(1));
+
+    except
+
+      on E: EWinjsException do begin
+
+        with E do begin
+          WriteErrLn('Message: %s', [Message]);
+          WriteErrLn('Error: %d', [ErrorCode]);
+
+          System.ExitCode := ErrorCode;
+        end;
+
+      end;
+
+      on E: EChakraScriptError do begin
+
+        with E do begin
+          with ScriptError do begin
+
+            WriteErrLn('[%s] %s.', [E.ClassName, E.Message]);
+            WriteErrLn('Script: "%s" (Line: %d, Column: %d)', [ ScriptName, Line + 1, Column ]);
+            WriteErrLn('Source: %s', [Source]);
+
+            System.ExitCode := ErrorCode;
+
+          end;
+        end;
+
+      end;
+
+      on E: EChakraAPIError do begin
+      end;
+
+      on E: Exception do begin
+
+        WriteErrLn('[%s] %s.', [E.ClassName, E.Message]);
+
+      end;
+
+    end;
+
+  end;
+
+end.
