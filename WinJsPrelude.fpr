@@ -1,7 +1,0 @@
-library WinJsPrelude;
-
-uses WinJsPreludeUtils;
-
-exports GetJsValue;
-
-end.
