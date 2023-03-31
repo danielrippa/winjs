@@ -47,7 +47,7 @@ implementation
 
     Handle := WinjsUtils.LoadLibrary(FilePath);
 
-    WinJsLibraryHandles[L] := Handle;
+    WinJsLibraryHandles[L + 1] := Handle;
 
     GetJsValue := GetProcAddress(Handle, 'GetJsValue');
 
