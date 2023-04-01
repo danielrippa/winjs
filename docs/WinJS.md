@@ -16,6 +16,10 @@ winjs =
       stdout: (value: string) -> void
       debug: (..args: string) -> void
 
+  os:
+    
+    now: -> string
+
   winjs:
   
     eval-script-source: (script-source: string, script-path: string) -> {}
