@@ -25,6 +25,7 @@ winjs =
     eval-script-source: (script-source: string, script-path: string) -> {}
     load-script: (script-name: string, script-content: string) -> {}
     load-library: (dll-filename: string) -> {}
+    load-wasm: (wasm-filename: string) -> {}
     throw-exception: (message: string, error-code: number) -> void
 
 ```
