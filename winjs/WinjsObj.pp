@@ -79,15 +79,21 @@ implementation
     raise EWinjsException.Create(Message, ErrorCode);
   end;
 
+  function WinjsLoadWasm(Args: PJsValue; ArgCount: Word): TJsValue;
+  begin
+    CheckParams('loadWasm', Args, ArgCount, [jsString], 1);
+    Result := LoadWasm(JsStringAsString(Args^));
+  end;
 
   function GetWinjs;
   begin
     Result := CreateObject;
 
-    SetFunction(Result, 'evalScriptSource', @WinjsEvalScriptSource);
-    SetFunction(Result, 'loadScript', @WinjsLoadScript);
-    SetFunction(Result, 'loadLibrary', @WinjsLoadLibrary);
-    SetFunction(Result, 'throwException', @WinjsThrowException);
+    SetFunction(Result, 'evalScriptSource', WinjsEvalScriptSource);
+    SetFunction(Result, 'loadScript', WinjsLoadScript);
+    SetFunction(Result, 'loadLibrary', WinjsLoadLibrary);
+    SetFunction(Result, 'loadWasm', WinjsLoadWasm);
+    SetFunction(Result, 'throwException', WinjsThrowException);
   end;
 
   procedure UnloadWinJsLibraries;
