@@ -26,6 +26,9 @@ interface
   function IntAsJsNumber(Value: Integer): TJsValue;
   function JsNumberAsInt(Value: TJsValue): Integer;
 
+  function BooleanAsJsBoolean(Value: Boolean): TJsValue;
+  function JsBooleanAsBoolean(Value: TJsValue): Boolean;
+
   procedure SetFunction(Instance: TJsValue; FunctionName: WideString; Callback: TJsFunctionFunc);
 
   function Undefined: TJsValue;
@@ -36,7 +39,7 @@ interface
 
   function GetValueType(Value: TJsValue): TJsValueType;
 
-  function ThrowException(Error: TJsValue):TJsValue;
+  function CallFunction(Func: TJsValue; Args: PJsValue; ArgCount: Word): TJsValue;
 
 implementation
 
@@ -133,6 +136,19 @@ implementation
     TryChakraAPI('JsIntToNumber', JsIntToNumber(Value, Result));
   end;
 
+  function BooleanAsJsBoolean;
+  begin
+    TryChakraAPI('JsBoolToBoolean', JsBoolToBoolean(Value, Result));
+  end;
+
+  function JsBooleanAsBoolean;
+  var
+    B: ByteBool;
+  begin
+    TryChakraAPI('JsBooleanToBool', JsBooleanToBool(Value, B));
+    Result := B;
+  end;
+
   function EvalScriptSource;
   var
     Source, URL: TJsValue;
@@ -208,10 +224,9 @@ implementation
     TryChakraAPI('JsGetValueType', JsGetValueType(Value, Result));
   end;
 
-  function ThrowException;
+  function CallFunction;
   begin
-    TryChakraAPI('JsSetException', JsSetException(Error));
-    Result := Undefined;
+    TryChakraAPI('JsCallFunction', JsCallFunction(Func, Args, ArgCount, Result));
   end;
 
 end.

@@ -45,7 +45,7 @@ interface
 
 implementation
 
-  uses chakracore_dll, Chakra;
+  uses chakracore_dll, Chakra, WinjsUtils;
 
   function ErrorMessage(ErrorCode: TJsErrorCode): WideString;
   begin
@@ -81,7 +81,7 @@ implementation
 
       Exception := GetProperty(Metadata, 'exception');
 
-      Message := JsValueAsString(Exception);
+      Message := JsValueAsString(StringifyJsValue(Exception));
     end;
 
   end;
