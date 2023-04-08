@@ -19,7 +19,10 @@ interface
 
   function LoadScript(FilePath: WideString): TJsValue;
   function LoadLibrary(FilePath: WideString): THandle;
+  function LoadWasm(FilePath: WideString): TJsValue;
   function RunScriptFile(FilePath: WideString): Integer;
+
+  function StringifyJsValue(aValue: TJsValue): TJsValue;
 
   procedure WriteErrLn(Fmt: WideString; Args: array of const);
 
@@ -124,10 +127,31 @@ implementation
     Result := Handle;
   end;
 
+  function LoadWasm;
+  begin
+    Result := StringAsJsString(ReadUnicodeTextFileContent(FilePath));
+  end;
+
   constructor EWinjsException.Create;
   begin
     inherited Create(aMessage);
     FErrorCode := aErrorCode;
+  end;
+
+  function StringifyJsValue;
+  var
+    JSON: TJsValue;
+    stringify: TJsValue;
+    Args: Array of TJsValue;
+    ArgCount: Word;
+  begin
+    JSON := GetProperty(GetGlobalObject, 'JSON');
+    stringify := GetProperty(JSON, 'stringify');
+
+    Args := [ JSON, aValue ];
+    ArgCount := Length(Args);
+
+    Result := CallFunction(stringify, @Args[0], ArgCount);
   end;
 
 end.
