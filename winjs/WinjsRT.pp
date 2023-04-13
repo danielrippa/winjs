@@ -20,7 +20,7 @@ interface
 
 implementation
 
-  uses ChakraErr, chakracore_dll, Chakra, DynLibs, WinJsUtils, WinjsObj, ChakraUtils, WinjsProc, WinjsOS;
+  uses ChakraErr, chakracore_dll, Chakra, DynLibs, WinJsUtils, WinjsObj, ChakraUtils, WinjsProc, WinjsOS, WinjsFS;
 
   procedure TWinJsRuntime.Init;
   var
@@ -32,6 +32,7 @@ implementation
 
     SetProperty(Global, 'process', GetWinjsProcess);
     SetProperty(Global, 'os', GetWinjsOS);
+    SetProperty(Global, 'fs', GetWinjsFS);
     SetProperty(Global, 'winjs', GetWinjs);
 
   end;
