@@ -19,6 +19,14 @@ winjs =
   os:
     
     now: -> string
+    
+  fs:
+    
+    file-exists: (file-path: string) -> boolean
+    folder-exists: (folder-path: string) -> boolean
+    read-text-file: (file-path: string) -> string | void
+    get-current-folder: -> string
+    set-current-folder: (location: string) -> boolean
 
   winjs:
   
