@@ -45,13 +45,13 @@ implementation
     Result := BooleanAsJsBoolean(SetCurrentDir(JsStringAsString(Args^)));
   end;
 
-  function FsReadFile(Args: PJsValue; ArgCount: Word): TJsValue;
+  function FsReadTextFile(Args: PJsValue; ArgCount: Word): TJsValue;
   var
     aFileName: WideString;
     Content: WideString;
   begin
     Result := Undefined;
-    CheckParams('readFile', Args, ArgCount, [jsString], 1);
+    CheckParams('readTextFile', Args, ArgCount, [jsString], 1);
 
     aFileName := JsStringAsString(Args^);
 
@@ -70,7 +70,7 @@ implementation
     SetFunction(Result, 'folderExists', FsFolderExists);
     SetFunction(Result, 'getCurrentFolder', FsGetCurrentFolder);
     SetFunction(Result, 'setCurrentFolder', FsSetCurrentFolder);
-    SetFunction(Result, 'readFile', FsReadFile);
+    SetFunction(Result, 'readTextFile', FsReadTextFile);
   end;
 
 end.
