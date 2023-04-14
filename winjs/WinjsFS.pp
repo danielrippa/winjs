@@ -12,7 +12,7 @@ interface
 implementation
 
   uses
-    Chakra, ChakraUtils, SysUtils, Win32TextFile;
+    Chakra, ChakraUtils, SysUtils, WinjsUtils;
 
   function FsFileExists(Args: PJsValue; ArgCount: Word): TJsValue;
   var
@@ -48,18 +48,14 @@ implementation
   function FsReadTextFile(Args: PJsValue; ArgCount: Word): TJsValue;
   var
     aFileName: WideString;
-    Content: WideString;
   begin
     Result := Undefined;
     CheckParams('readTextFile', Args, ArgCount, [jsString], 1);
 
     aFileName := JsStringAsString(Args^);
-
     if not FileExists(aFileName) then Exit;
 
-    if ReadTextFileContent(aFileName, Content) then begin
-      Result := StringAsJsString(Content);
-    end;
+    Result := StringAsJsString(ReadUnicodeTextFileContent(aFileName));
   end;
 
   function GetWinjsFS;

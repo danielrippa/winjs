@@ -17,10 +17,12 @@ interface
         property ErrorCode: Integer read FErrorCode;
     end;
 
-  function LoadScript(FilePath: WideString): TJsValue;
+  function LoadScript(aFilePath: WideString; aScriptName: WideString = ''): TJsValue;
   function LoadLibrary(FilePath: WideString): THandle;
   function LoadWasm(FilePath: WideString): TJsValue;
   function RunScriptFile(FilePath: WideString): Integer;
+
+  function ReadUnicodeTextFileContent(FilePath: WideString): WideString;
 
   function StringifyJsValue(aValue: TJsValue): TJsValue;
 
@@ -36,7 +38,7 @@ implementation
     WriteLn(StdErr, WideFormat(Fmt, Args));
   end;
 
-  function ReadUnicodeTextFileContent(FilePath: UnicodeString): UnicodeString;
+  function ReadUnicodeTextFileContent;
   var
     FileStream: TFileStream;
     S: UTF8String;
@@ -79,8 +81,13 @@ implementation
     ScriptName: WideString;
     ScriptContent: WideString;
   begin
-    ScriptName := ExtractFilenameWithoutExt(FilePath);
-    ScriptContent := ReadUnicodeTextFileContent(FilePath);
+    ScriptContent := ReadUnicodeTextFileContent(aFilePath);
+
+    if aScriptName = '' then begin
+      ScriptName := ExtractFilenameWithoutExt(aFilePath);
+    end else begin
+      ScriptName := Format('%s (%s)', [aScriptName, aFilePath]);
+    end;
 
     Result := JsRuntime.EvalScriptSource(ScriptContent, ScriptName);
   end;

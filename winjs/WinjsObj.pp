@@ -12,27 +12,9 @@ interface
 implementation
 
   uses
-    Chakra, WinjsRT, ChakraUtils, WinjsUtils, Windows, SysUtils, DynLibs;
+    Chakra, WinjsRT, ChakraUtils, WinjsUtils, Windows, SysUtils, DynLibs, WinjsOS, WinjsFS;
 
   var WinJsLibraryHandles: array of TLibHandle;
-
-  function WinjsEvalScriptSource(Args: PJsValue; ArgCount: Word): TJsValue;
-  var
-    ScriptSource: WideString;
-    ScriptPath: WideString;
-  begin
-    CheckParams('evalScriptSource', Args, ArgCount, [jsString, jsString], 1);
-
-    ScriptSource := JsStringAsString(Args^);
-    ScriptPath := '';
-
-    if ArgCount > 1 then begin
-      Inc(Args);
-      ScriptPath := JsStringAsString(Args^);
-    end;
-
-    Result := JsRuntime.EvalScriptSource(ScriptSource, ScriptPath);
-  end;
 
   function LoadWinJsLibrary(FilePath: WideString): TJsValue;
   type
@@ -61,22 +43,15 @@ implementation
   end;
 
   function WinjsLoadScript(Args: PJsValue; ArgCount: Word): TJsValue;
-  begin
-    CheckParams('loadScript', Args, ArgCount, [jsString], 1);
-    Result := LoadScript(JsStringAsString(Args^));
-  end;
-
-  function WinjsThrowException(Args: PJsValue; ArgCount: Word): TJsValue;
   var
-    Message: WideString;
-    ErrorCode: Integer;
+    aFileName, aScriptName: WideString;
   begin
-    CheckParams('throwException', Args, ArgCount, [jsString, jsNumber], 2);
+    CheckParams('loadScript', Args, ArgCount, [jsString, jsString], 2);
 
-    Message := JsStringAsString(Args^); Inc(Args);
-    ErrorCode := JsNumberAsInt(Args^);
+    aFileName := JsStringAsString(Args^); Inc(Args);
+    aScriptName := JsStringAsString(Args^);
 
-    raise EWinjsException.Create(Message, ErrorCode);
+    Result := LoadScript(aFileName, aScriptName);
   end;
 
   function WinjsLoadWasm(Args: PJsValue; ArgCount: Word): TJsValue;
@@ -89,11 +64,12 @@ implementation
   begin
     Result := CreateObject;
 
-    SetFunction(Result, 'evalScriptSource', WinjsEvalScriptSource);
     SetFunction(Result, 'loadScript', WinjsLoadScript);
     SetFunction(Result, 'loadLibrary', WinjsLoadLibrary);
     SetFunction(Result, 'loadWasm', WinjsLoadWasm);
-    SetFunction(Result, 'throwException', WinjsThrowException);
+
+    SetProperty(Result, 'os', GetWinjsOS);
+    SetProperty(Result, 'fileSystem', GetWinjsFs);
   end;
 
   procedure UnloadWinJsLibraries;
