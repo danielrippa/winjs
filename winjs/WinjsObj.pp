@@ -29,11 +29,11 @@ implementation
 
     Handle := WinjsUtils.LoadLibrary(FilePath);
 
-    WinJsLibraryHandles[L + 1] := Handle;
+    WinJsLibraryHandles[L] := Handle;
 
     GetJsValue := GetProcAddress(Handle, 'GetJsValue');
 
-    Result := GetJsValue();
+    Result := GetJsValue;
   end;
 
   function WinjsLoadLibrary(Args: PJsValue; ArgCount: Word): TJsValue;
