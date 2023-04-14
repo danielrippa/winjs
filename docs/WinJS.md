@@ -27,7 +27,7 @@ winjs =
 
       now: -> string
 
-    fs:
+    file-system:
 
       file-exists: (file-path: string) -> boolean
       folder-exists: (folder-path: string) -> boolean
