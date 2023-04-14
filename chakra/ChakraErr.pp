@@ -81,7 +81,11 @@ implementation
 
       Exception := GetProperty(Metadata, 'exception');
 
-      Message := JsValueAsString(StringifyJsValue(Exception));
+      case GetValueType(Exception) of
+        jsObject: Exception := StringifyJsValue(Exception);
+      end;
+
+      Message := JsValueAsString(Exception);
     end;
 
   end;
